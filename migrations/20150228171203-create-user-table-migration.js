@@ -3,7 +3,7 @@
 module.exports = {
   up: function(migration, DataTypes, done) {
     migration.createTable(
-      "user",
+      "users",
       {
         id: {
           type: DataTypes.INTEGER,
@@ -37,7 +37,7 @@ module.exports = {
         charset: "UTF8"
       }
     );
-    dne();
+    done();
   },
 
   down: function(migration, DataTypes, done) {

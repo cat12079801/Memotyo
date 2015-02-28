@@ -3,7 +3,7 @@
 module.exports = {
   up: function(migration, DataTypes, done) {
     migration.createTable(
-      "memo",
+      "memos",
       {
         id: {
           type: DataTypes.INTEGER,
@@ -27,11 +27,11 @@ module.exports = {
           allowNull: false,
           defaultValue: false,
         },
-        created_at: {
+        createdAt: {
           type: DataTypes.DATE,
           allowNull: false,
         },
-        updated_at: {
+        updatedAt: {
           type: DataTypes.DATE,
           allowNull: false,
         },
