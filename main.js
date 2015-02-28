@@ -1,4 +1,4 @@
-var conf = require('./config.js');
+var conf = require('./config/config.js');
 
 var twitter = require('ntwitter');
 var tw = new twitter({
