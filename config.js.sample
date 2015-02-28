@@ -1,0 +1,6 @@
+exports.ntwitter = {
+  "consumer_key": "set",
+  "consumer_secret": "your",
+  "access_token_key": "secret",
+  "access_token_secret": "key",
+};
