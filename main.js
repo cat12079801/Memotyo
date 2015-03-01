@@ -66,36 +66,36 @@ User.sync({});
 Memo.sync({});
 
 tw.stream('user', {'replies': 'all'}, function(stream) {
-  stream.on('data', function (data) {
-    if(data.user === undefined || data.entities.user_mentions[0] === undefined){
-      console.log(data);
-    }else if(data.entities.user_mentions[0].id == 3043673340 && data.entities.user_mentions[1] === undefined){
-      //console.log(data.text);
+  stream.on('data', function (tw_data) {
+    if(tw_data.user === undefined || tw_data.entities.user_mentions[0] === undefined){
+      console.log(tw_data);
+    }else if(tw_data.entities.user_mentions[0].id == 3043673340 && tw_data.entities.user_mentions[1] === undefined){
+      //console.log(tw_data.text);
       //var date = new Date();
-      //tw.updateStatus(date.getHours() + "時" + date.getMinutes() + "分" + date.getSeconds() + "秒をお知らせします", {}, function(err, data){});
+      //tw.updateStatus(date.getHours() + "時" + date.getMinutes() + "分" + date.getSeconds() + "秒をお知らせします", {}, function(err, tw_data){});
       User.find({
         where: {
-          account_id: data.id,
+          account_id: tw_data.id,
         }
       }).success(function(user){
-        if(user === null && data.user.following === null){
-          not_user(user, data);
-        }else if(user === null && data.user.following === true){
-          new_user(user, data);
+        if(user === null && tw_data.user.following === null){
+          not_user(user, tw_data);
+        }else if(user === null && tw_data.user.following === true){
+          new_user(user, tw_data);
         }else{
-          existing_user(user, data);
+          existing_user(user, tw_data);
         }
       });
     }
   });
 });
 
-function not_user(user, data){
-  console.log("ちゃんと受け取れてM@S " + data.text);
+function not_user(user, tw_data){
+  console.log("ちゃんと受け取れてM@S " + tw_data.text);
 }
 
-function new_user(user, data){
+function new_user(user, tw_data){
 }
 
-function existing_user(user, data){
+function existing_user(user, tw_data){
 }
