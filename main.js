@@ -35,7 +35,8 @@ var User = sequelize.define('user', {
     defaultValue: true,
   }
 },{
-  underscored: true
+  charset: "UTF8",
+  underscored: true,
 });
 var Memo = sequelize.define('memo', {
   memo: {
@@ -55,7 +56,8 @@ var Memo = sequelize.define('memo', {
     defaultValue: false,
   }
 },{
-  underscored: true
+  charset: "UTF8",
+  underscored: true,
 });
 
 Memo.belongsTo(User);
@@ -63,29 +65,6 @@ Memo.belongsTo(User);
 User.sync({});
 Memo.sync({});
 
-//User.create({
-//  account_id: 132,
-//  screen_name: "hoge",
-//  enable_flag: false,
-//}).error(function(err){
-//  console.log(err);
-//}).success(function(result){
-//  console.log(result);
-//});
-
-Memo.create({
-  user_id: 1,
-  memo: "ほげ～～～～",
-  next_tweet_flag: true,
-  set_time: null,
-  done_flag: false,
-}).error(function(err){
-  console.log(err);
-}).success(function(result){
-  console.log(result);
-});
-
-/*
 tw.stream('user', {'replies': 'all'}, function(stream) {
   stream.on('data', function (data) {
     if(data.user === undefined || data.entities.user_mentions[0] === undefined){
