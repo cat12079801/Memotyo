@@ -69,7 +69,7 @@ tw.stream('user', {'replies': 'all'}, function(stream) {
   stream.on('data', function (data) {
     if(data.user === undefined || data.entities.user_mentions[0] === undefined){
       console.log(data);
-    }else if(data.entities.user_mentions[0].id == 3043673340){
+    }else if(data.entities.user_mentions[0].id == 3043673340 && data.entities.user_mentions[1] === undefined){
       console.log(data.text);
       var date = new Date();
       tw.updateStatus(date.getHours() + "時" + date.getMinutes() + "分" + date.getSeconds() + "秒をお知らせします", {}, function(err, data){});
