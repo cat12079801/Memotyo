@@ -98,9 +98,9 @@ tw.stream('user', {'replies': 'all'}, function(stream) {
 function not_user(user, tw_data){
   console.log("not user");
   tw.updateStatus(
-    "@" + tw_data.user.screen_name + "\n\nリプライありがとうございます！\nこのbotを利用したい場合はこのbotをフォローした状態で「使いたい」を含むリプライを送ってください。", 
+    "@" + tw_data.user.screen_name + "\n\nリプライありがとうございます！\nこのbotを利用したい場合はこのbotをフォローした状態で「使いたい」を含むリプライを送ってください。",
     {
-      in_reply_to_status_id: tw_data.id
+      in_reply_to_status_id: tw_data.id_str
     }, function(error, success){}
   );
 }
@@ -117,16 +117,16 @@ function new_user(user, tw_data){
       tw.updateStatus(
         "@" + success.screen_name + "\n\n使ってくれてありがとうございます！\nリプライされた内容をメモして次のあなたのツイート時にリプライを送ります。\n詳しい使い方は「使い方」を含むツイートをするか下のURLを参照してください。\nhttps://github.com/cat12079801/Memotyo",
         {
-          in_reply_to_status_id: tw_data.id
+          in_reply_to_status_id: tw_data.id_str
         }, function(error, success){}
       );
     });
   }else{
     console.log("no");
     tw.updateStatus(
-      "@" + tw_data.user.screen_name + "\n\nフォローありがとうございます！\nこのbotを利用したい場合は「使いたい」を含むリプライをこのbotに対して送ってください。", 
+      "@" + tw_data.user.screen_name + "\n\nフォローありがとうございます！\nこのbotを利用したい場合は「使いたい」を含むリプライをこのbotに対して送ってください。",
       {
-        in_reply_to_status_id: tw_data.id
+        in_reply_to_status_id: tw_data.id_str
       }, function(error, success){}
     );
   }
