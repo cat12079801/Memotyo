@@ -20,7 +20,7 @@ var sequelize = new Sequelize(
 );
 
 var User = sequelize.define('user', {
-  account_id: {
+  twitter_id: {
     type: Sequelize.INTEGER,
     unique: true,
     allowNull: false,
