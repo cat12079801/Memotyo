@@ -4,3 +4,13 @@ exports.ntwitter = {
   "access_token_key": "secret",
   "access_token_secret": "key",
 };
+
+exports.sequelize = {
+  "database_name": "set",
+  "user_name": "you",
+  "password": "want",
+  "host": "to",
+  "dialect": "use",
+};
+
+exports.my_twitter_id = your twitter account id(int);
