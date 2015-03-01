@@ -78,12 +78,16 @@ tw.stream('user', {'replies': 'all'}, function(stream) {
           account_id: tw_data.id,
         }
       }).success(function(user){
-        if(user === null && tw_data.user.following === null){
-          not_user(user, tw_data);
-        }else if(user === null && tw_data.user.following === true){
-          new_user(user, tw_data);
-        }else{
+        if(user !== null){
           existing_user(user, tw_data);
+        }else{
+          tw.getFollowersIds(3043673340, function(err, follower_ids){
+            if(follower_ids.indexOf(tw_data.user.id) != -1){
+              new_user(user, tw_data);
+            }else{
+              not_user(user, tw_data);
+            }
+          });
         }
       });
     }
@@ -91,11 +95,13 @@ tw.stream('user', {'replies': 'all'}, function(stream) {
 });
 
 function not_user(user, tw_data){
-  console.log("ちゃんと受け取れてM@S " + tw_data.text);
+  console.log("not user");
 }
 
 function new_user(user, tw_data){
+  console.log("new user");
 }
 
 function existing_user(user, tw_data){
+  console.log("existing user");
 }
