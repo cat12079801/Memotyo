@@ -68,14 +68,15 @@ Memo.sync({});
 tw.stream('user', {'replies': 'all'}, function(stream) {
   stream.on('data', function (tw_data) {
     if(tw_data.user === undefined || tw_data.entities.user_mentions[0] === undefined){
-      console.log(tw_data);
+      //console.log(tw_data);
+      require('fs').writeFile('log/log.txt', JSON.stringify(tw_data, null, '  '));
     }else if(tw_data.entities.user_mentions[0].id == conf.my_twitter_id && tw_data.entities.user_mentions[1] === undefined){
       //console.log(tw_data.text);
       //var date = new Date();
       //tw.updateStatus(date.getHours() + "時" + date.getMinutes() + "分" + date.getSeconds() + "秒をお知らせします", {}, function(err, tw_data){});
       User.find({
         where: {
-          account_id: tw_data.id,
+          twitter_id: tw_data.user.id,
         }
       }).success(function(user){
         if(user !== null){
@@ -99,7 +100,19 @@ function not_user(user, tw_data){
 }
 
 function new_user(user, tw_data){
-  console.log("new user");
+  if(tw_data.text.match(/使いたい/) != null){
+    console.log("ok");
+    User.create({
+      twitter_id: tw_data.user.id,
+      screen_name: tw_data.user.screen_name,
+      enable_flag: true,
+    });
+    tw.createFriendship(tw_data.user.id, function(error, success){
+      tw.updateStatus("@" + success.screen_name + "\n\n使ってくれてありがとうございます！\nリプライされた内容をメモして次のあなたのツイート時にリプライを送ります。\n詳しい使い方は「使い方」を含むツイートをするか下のURLを参照してください。\nhttps://github.com/cat12079801/Memotyo", {}, function(error, success){});
+    });
+  }else{
+    console.log("no");
+  }
 }
 
 function existing_user(user, tw_data){
