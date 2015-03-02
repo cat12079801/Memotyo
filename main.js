@@ -81,7 +81,7 @@ Memo.belongsTo(User);
 User.sync({});
 Memo.sync({});
 
-tw.stream('user', {'replies': 'all'}, function(stream) {
+tw.stream('user', {}, function(stream) {
   stream.on('data', function (tw_data) {
     if(tw_data.user === undefined || tw_data.entities.user_mentions[0] === undefined){
       //console.log(tw_data);
