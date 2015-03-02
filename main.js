@@ -1,4 +1,5 @@
 var conf = require('./config/config.js');
+var index = require('./config/index.js');
 
 var twitter = require('ntwitter');
 var tw = new twitter({
@@ -98,7 +99,7 @@ tw.stream('user', {'replies': 'all'}, function(stream) {
 function not_user(user, tw_data){
   console.log("not user");
   tw.updateStatus(
-    "@" + tw_data.user.screen_name + "\n\nリプライありがとうございます！\nこのbotを利用したい場合はこのbotをフォローした状態で「使いたい」を含むリプライを送ってください。",
+    "@" + tw_data.user.screen_name + index.not_user,
     {
       in_reply_to_status_id: tw_data.id_str
     }, function(error, success){}
@@ -115,7 +116,7 @@ function new_user(user, tw_data){
     });
     tw.createFriendship(tw_data.user.id, function(error, success){
       tw.updateStatus(
-        "@" + success.screen_name + "\n\n使ってくれてありがとうございます！\nリプライされた内容をメモして次のあなたのツイート時にリプライを送ります。\n詳しい使い方は「使い方」を含むツイートをするか下のURLを参照してください。\nhttps://github.com/cat12079801/Memotyo",
+        "@" + success.screen_name + index.new_user["want_to_use"],
         {
           in_reply_to_status_id: tw_data.id_str
         }, function(error, success){}
@@ -124,7 +125,7 @@ function new_user(user, tw_data){
   }else{
     console.log("no");
     tw.updateStatus(
-      "@" + tw_data.user.screen_name + "\n\nフォローありがとうございます！\nこのbotを利用したい場合は「使いたい」を含むリプライをこのbotに対して送ってください。",
+      "@" + tw_data.user.screen_name + index.new_user["no_want_to_use"],
       {
         in_reply_to_status_id: tw_data.id_str
       }, function(error, success){}
