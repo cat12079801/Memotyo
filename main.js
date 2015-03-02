@@ -150,4 +150,17 @@ function new_user(user, tw_data){
 
 function existing_user(user, tw_data){
   console.log("existing user");
+  User.find({
+    where: {
+      twitter_id: tw_data.user.id
+    }
+  }).success(function(user){
+    Memo.create({
+      memo: tw_data.text.replace(/^@memotyo_bot[\n ]*/, "").replace(/[ ]*@memotyo_bot[ ]*/, " ").replace(/[\n ]*@memotyo_bot[\n ]*/, "\n"),
+      next_tweet_flag: true,
+      set_time: null,
+      done_flag: false,
+      user_id: user.id,
+    });
+  });
 }
