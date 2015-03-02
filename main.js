@@ -1,6 +1,21 @@
 var conf = require('./config/config.js');
 var index = require('./config/index.js');
 
+// ツイート重複を防ぐための開発用変数
+// この関数は拾い物
+var random_s = function() {
+  var a = 'abcdefghijklmnopqrstuvwxyz'
+    + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    + '0123456789'
+    + "!\"#$%&'()-=^~\\|`[{;+:*]},<.>/?_";
+  a = a.split('');
+  var s = '';
+  for (var i = 0; i < 7; i++) {
+      s += a[Math.floor(Math.random() * a.length)];
+  }
+  return "\n\n" + s;
+};
+
 var twitter = require('ntwitter');
 var tw = new twitter({
   consumer_key: conf.ntwitter["consumer_key"],
@@ -99,7 +114,7 @@ tw.stream('user', {'replies': 'all'}, function(stream) {
 function not_user(user, tw_data){
   console.log("not user");
   tw.updateStatus(
-    "@" + tw_data.user.screen_name + index.not_user,
+    "@" + tw_data.user.screen_name + index.not_user + random_s(),
     {
       in_reply_to_status_id: tw_data.id_str
     }, function(error, success){}
@@ -116,7 +131,7 @@ function new_user(user, tw_data){
     });
     tw.createFriendship(tw_data.user.id, function(error, success){
       tw.updateStatus(
-        "@" + success.screen_name + index.new_user["want_to_use"],
+        "@" + success.screen_name + index.new_user["want_to_use"] + random_s(),
         {
           in_reply_to_status_id: tw_data.id_str
         }, function(error, success){}
@@ -125,7 +140,7 @@ function new_user(user, tw_data){
   }else{
     console.log("no");
     tw.updateStatus(
-      "@" + tw_data.user.screen_name + index.new_user["no_want_to_use"],
+      "@" + tw_data.user.screen_name + index.new_user["no_want_to_use"] + random_s(),
       {
         in_reply_to_status_id: tw_data.id_str
       }, function(error, success){}
