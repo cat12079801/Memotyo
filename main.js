@@ -83,9 +83,11 @@ Memo.sync({});
 
 tw.stream('user', {}, function(stream) {
   stream.on('data', function (tw_data) {
-    if(tw_data.user === undefined || tw_data.entities.user_mentions[0] === undefined){
+    if(tw_data.user === undefined){
       //console.log(tw_data);
       require('fs').writeFile('log/log.txt', JSON.stringify(tw_data, null, '  '));
+    }else if(tw_data.entities.user_mentions[0] === undefined){
+      tweet_check(tw_data);
     }else if(tw_data.entities.user_mentions[0].id == conf.my_twitter_id && tw_data.entities.user_mentions[1] === undefined){
       //console.log(tw_data.text);
       //var date = new Date();
@@ -110,6 +112,49 @@ tw.stream('user', {}, function(stream) {
     }
   });
 });
+
+function tweet_check(tw_data){
+  User.find({
+    where: {
+      twitter_id: tw_data.user.id,
+    }
+  }).success(function(user){
+    Memo.findAll({
+      where: {
+        user_id: user.id,
+        next_tweet_flag: true,
+        done_flag: false,
+      }
+    }).success(function(memos){
+
+      if(memos.length == 0) return;
+
+      var send_memo = new Array;
+      for(var i = 0 ; i < memos.length ; i++){
+        send_memo.push(memos[i]["memo"]);
+      }
+      tw.updateStatus(
+        "@" + tw_data.user.screen_name + "\n\n" + send_memo.join("\n") + random_s(),
+        {
+          in_reply_to_status_id: tw_data.id_str
+        }, function(error, success){
+
+          if(error) return;
+
+          for(var i = 0 ; i < memos.length ; i++){
+            Memo.update({
+              done_flag: true,
+            }, {
+              where: {
+                id: memos[i]["id"],
+              }
+            });
+          }
+        }
+      );
+    });
+  });
+}
 
 function not_user(user, tw_data){
   console.log("not user");
