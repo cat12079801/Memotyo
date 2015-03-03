@@ -210,11 +210,49 @@ function existing_user(user, tw_data){
   });
 }
 
-function include_time?(text){
-  var regExp = [
-    /([1-9]|1[0-2])[月/]([1-9]|[12][0-9]|3[01])日?[\b]([01][0-9]|2[0-3])[:時]([0-5][0-9]分?)?/, //
-    /([01][0-9]|2[0-3]):[0-5][0-9]/, // 00:00 - 23:59
-  ];
+function include_time(text){
+  var time = [];
+  var time_detail = [];
+  var today = new Date();
 
-  //if(var time = text.match(/([1-9]|1[0-2])\/([1-9]|[12][0-9]|3[01])\.([01][0-9]|2[0-3])(:[0-5][0-9]?)/) != null)
+  if((time = text.match(/!([1-9]|1[0-2])\/([1-9]|[12][0-9]|3[01]) ([01]?[0-9]|2[0-3])(:[0-5][0-9])?!/)) != null){
+
+    time_detail = time[0].substring(1, time[0].length - 1).split(/[ :/]/);
+    var date = new Date(today.getFullYear(), time_detail[0], time_detail[1], time_detail[2], time_detail[3], 0);
+    if(date.getTime() < today.getTime()){
+      date.setFullYear(Number(date.getFullYear()) + 1);
+    }
+    return date;
+
+  }else if((time = text.match(/!([1-9]|1[0-2])\/([1-9]|[12][0-9]|3[01])!/)) != null){
+
+    time_detail = time[0].substring(1, time[0].length - 1).split(/[ :/]/);
+
+    var date = new Date(today.getFullYear(), time_detail[0], time_detail[1], 0, 0, 0);
+    if(date.getTime() < today.getTime()){
+      date.setFullYear(Number(date.getFullYear()) + 1);
+    }
+    return date;
+
+  }else if((time = text.match(/!([01]?[0-9]|2[0-3]):[0-5][0-9]!/)) != null){
+
+    time_detail = time[0].substring(1, time[0].length - 1).split(/[ :/]/);
+
+    var date = new Date(today.getFullYear(), today.getMonth(), today.getDate(), time_detail[0], time_detail[1], 0);
+    if(date.getTime() < today.getTime()){
+      date.setDate(Number(date.getDate()) + 1);
+    }
+    return date;
+
+  }else if((time = text.match(/!([01]?[0-9]|2[0-3])!/)) != null){
+
+    var date = new Date(today.getFullYear(), today.getMonth(), today.getDate(), time[0].substring(1, time[0].length - 1), 0, 0);
+    if(date.getTime() < today.getTime()){
+      date.setDate(Number(date.getDate()) + 1);
+    }
+    return date;
+
+  }else{
+    return null;
+  }
 }
