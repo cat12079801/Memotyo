@@ -200,13 +200,23 @@ function existing_user(user, tw_data){
       twitter_id: tw_data.user.id
     }
   }).success(function(user){
-    Memo.create({
-      memo: tw_data.text.replace(/^@memotyo_bot[\n ]*/, "").replace(/[ ]*@memotyo_bot[ ]*/, " ").replace(/[\n ]*@memotyo_bot[\n ]*/, "\n"),
-      next_tweet_flag: true,
-      set_time: null,
-      done_flag: false,
-      user_id: user.id,
-    });
+    if(include_time(tw_data.text) == null){
+      Memo.create({
+        memo: tw_data.text.replace(/^@memotyo_bot[\n ]*/, "").replace(/[ ]*@memotyo_bot[ ]*/, " ").replace(/[\n ]*@memotyo_bot[\n ]*/, "\n"),
+        next_tweet_flag: true,
+        set_time: null,
+        done_flag: false,
+        user_id: user.id,
+      });
+    }else{
+      Memo.create({
+        memo: tw_data.text.replace(/!.*!/, "").replace(/^@memotyo_bot[\n ]*/, "").replace(/[ ]*@memotyo_bot[ ]*/, " ").replace(/[\n ]*@memotyo_bot[\n ]*/, "\n"),
+        next_tweet_flag: false,
+        set_time: include_time(tw_data.text),
+        done_flag: false,
+        user_id: user.id,
+      });
+    }
   });
 }
 
