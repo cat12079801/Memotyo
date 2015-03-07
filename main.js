@@ -81,6 +81,56 @@ Memo.belongsTo(User);
 User.sync({});
 Memo.sync({});
 
+var timer = new Date(3000, 1, 1, 0, 0, 0);
+
+set_timer();
+
+setInterval(function(){
+  if(timer.getTime() <= new Date().getTime()){
+
+    Memo.find({
+      where: {
+        next_tweet_flag: false,
+        set_time: timer,
+        done_flag: false,
+      }
+    }).success(function(memo){
+      if(!memo){
+        set_timer();
+        return;
+      }
+
+      User.find({
+        where: {
+          id: memo["user_id"],
+        }
+      }).success(function(user){
+        tw.updateStatus(
+          "@" + user["screen_name"] + "\n\n" + memo["memo"] + random_s(),
+          {}, function(error, success){
+            if(error){
+              return;
+            }
+            Memo.update({
+              done_flag: true,
+            }, {
+              where: {
+                id: memo["id"],
+              }
+            });
+            setTimeout(function(){
+              set_timer();
+            }, 1000);
+          }
+        );
+      });
+    });
+
+  }else{
+    // 特に何もしない
+  }
+}, 5000);
+
 tw.stream('user', {}, function(stream) {
   stream.on('data', function (tw_data) {
     if(tw_data.user === undefined){
@@ -265,4 +315,23 @@ function include_time(text){
   }else{
     return null;
   }
+}
+
+function set_timer(){
+  Memo.findAll({
+    where: {
+      next_tweet_flag: false,
+      done_flag: false,
+    }
+  }).success(function(datas){
+    if(datas.length == 0){
+      timer = new Date(3000, 1, 1, 0, 0, 0);
+    }else{
+      for(var i = 0 ; i < datas.length ; i++){
+        if(timer.getTime() > datas[i]["set_time"].getTime()){
+          timer = datas[i]["set_time"]
+        }
+      }
+    }
+  });
 }
